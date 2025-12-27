@@ -3,3 +3,6 @@ const listePhrases = ["Pas de panique !", "La vie, l'univers et le reste", "Merc
 let baliseZoneProposition = document.getElementById("zoneProposition")
 let txtUtilisateur = document.getElementById("réponse")
 let validation = document.getElementById("valider")
+let proposition = document.querySelector("#zoneProposition")
+let score = 0
+let scoreUtilisateur = document.querySelector("#score")
