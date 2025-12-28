@@ -18,10 +18,9 @@
 <main>
     <section>
         <article>
-            <p>Choisissez votre option et tapez la proposition qui s'affiche dans le champ en-dessous</p>
+            <p>Avec quelle liste voulez vous jouer</p>
 
-            <form>
-                <div class="choixUtilisateur">
+            <div class="zoneOptions">
                     <div>
                         <input type="radio" id="ChoixMots" name="choix" value="mots"/>
                         <label for="ChoixMots">Mots</label>
@@ -30,17 +29,22 @@
                         <input type="radio" id="ChoixPhrases" name="choix" value="phrases"/>
                         <label for="ChoixPhrases">Phrases</label>
                     </div>
-                </div>
-                <div class="proposition">
-                    <label for="zoneProposition" id="proposé"></label>
-                    <input type="text" name="proposition" id="zoneProposition" readonly>
-                </div>
-                <div class="repUtilisateur">
-                    <input type="text" name="réponse" id="réponse" value="">
-                    <input type="button" value="Valider" id="valider">
-                </div>
-            </form>
-            <p>Votre Score : <span id="score">0</span></p>
+            </div>
+
+            <div class="proposition">
+                <label for="zoneProposition" id="proposé"></label>
+                <input type="text" name="proposition" id="zoneProposition" readonly>
+            </div>
+
+            <div class="zoneSaisis">
+                <input type="text" name="réponse" id="réponse" value="">
+                <input type="button" value="Valider" id="validation">
+            </div>
+
+            <div class="zoneScore">
+                <p>Votre Score est de: <span id="score">0</span> sur <span id="totalité">0</span> </p>
+            </div>
+
         </article>
     </section>
 
