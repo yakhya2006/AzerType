@@ -1,9 +1,10 @@
 let txtUtilisateur = document.getElementById("réponse")
 let validation = document.getElementById("validation")
-let proposition = document.querySelector(".proposition input")
+let proposition = document.querySelector(".proposition")
 let scoreUtilisateur = document.querySelector(".zoneScore")
 let choixUtilisateur = document.querySelectorAll(".zoneOptions input")
 let commencer = document.getElementById('commencer')
+const controle = document.querySelector('.boutonsControle')
 
 // fonction qui affiche le résultat de l'utilisateur
 function afficherResultat(score){
@@ -12,16 +13,30 @@ function afficherResultat(score){
 }
 
 function afficherProposition(texte) {
-    proposition.value = texte
+    proposition.innerText = texte
 }
 function choisirMotAuHasard(listePropositions) {
     let i = Math.floor(Math.random() * listePropositions.length);
     return listePropositions[i];
 }
 
-/**
- * Cette fonction lance le décompte du temps
- */
+// FONCTION QUI FAIT APPARAITRE LE BOUTON STOP
+function stop(){
+    let stop = `<input type="button" value="Arreter" class="stop" id="stop">`
+    const arreter = document.getElementById('stop')
+    commencer.addEventListener("click", function () {
+        controle.innerHTML = stop
+        arreter.addEventListener("click", function () {
+            txtUtilisateur.disabled = true
+            validation.disabled = true
+            commencer.disabled = false
+            clearInterval(intervalId)
+        })
+    })
+}
+
+
+// Cette fonction lance le décompte du temps
 function lancerCompteARebours() {
     let temps = 60 // Le temps de départ
     let timerElement = document.getElementById("timer")
@@ -45,12 +60,17 @@ function lancerCompteARebours() {
     }, 1000)
 }
 
-function lancerJeu(){
+function lancerJeu() {
     let i = 0
     let score = 0
     let motActuel = ''
     let listePropositions = listeMots
-    commencer.addEventListener('click', function(){
+    txtUtilisateur.disabled = true
+    validation.disabled = true
+
+    afficherResultat(score)
+    stop()
+    commencer.addEventListener('click', function () {
         lancerCompteARebours()
         motActuel = choisirMotAuHasard(listePropositions)
         afficherProposition(motActuel)
@@ -61,26 +81,37 @@ function lancerJeu(){
     })
 
     // Gestion de reponse utilisitauer
-    validation.addEventListener("click", function(event){
+    validation.addEventListener("click", function (event) {
         if (txtUtilisateur.value === motActuel) {
             // Si le mot saisi par l'utilisateur est correct, on incrémente le score
             if (listePropositions === listeMots) {
-                score = score+ 100
+                score = score + 100
+            } else {
+                score = score + 500
             }
-            else{
-                score = score+300
-            }
+
+            afficherResultat(score)
+
             txtUtilisateur.value = '' // On vide le champ texte
             motActuel = choisirMotAuHasard(listePropositions) // On pioche un nouveau mot
             afficherProposition(motActuel) // On l'affiche
         }
     })
 
+    // Gestion de la touche "Entrée"
+    txtUtilisateur.addEventListener('keyup', function(event) {
+        // Si la touche relâchée est "Enter"
+        if (event.key === "Enter") {
+            // On simule un clic sur le bouton validation
+            validation.click();
+        }
+    });
+
     // GESTION DES BOUTONS RADIO (Choix Mots / Phrases)
-    for (let index = 0; index < choixUtilisateur.length; index++){
+    for (let index = 0; index < choixUtilisateur.length; index++) {
         let boutonActuel = choixUtilisateur[index]
 
-        boutonActuel.addEventListener("click", function(event){
+        boutonActuel.addEventListener("click", function (event) {
             let monBouton = event.target;
 
             // Étape A : On change la liste utilisée

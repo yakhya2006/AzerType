@@ -110,6 +110,7 @@ section{
                 background-color: #ccc6c6;
             }
         }
+
         .zoneInfo {
             display: flex;
             justify-content: space-around;
@@ -125,6 +126,7 @@ section{
             color: var(--color-primary); /* Bleu foncé de ta charte */
         }
     }
+
     .commencer{
         transition: 0.2s;
         display: flex;
@@ -136,10 +138,24 @@ section{
         font-size: 1.2rem;
         margin-top: 30px;
         padding: 10px 20px;
-
         cursor: pointer;
     }
     .commencer:hover{
+        transform: scale(1.1);
+    }
+
+    .stop{
+        transition: 0.2s;
+        color: var(--color-tertiary);
+        background-color: red;
+        margin-top: 30px;
+        padding: 10px 20px;
+        font-size: 1.2rem;
+        border-radius: 10px;
+        border: none;
+        cursor: pointer;
+    }
+    .stop:hover{
         transform: scale(1.1);
     }
 }
