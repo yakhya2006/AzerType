@@ -5,6 +5,7 @@ let scoreUtilisateur = document.querySelector(".zoneScore")
 let choixUtilisateur = document.querySelectorAll(".zoneOptions input")
 let commencer = document.getElementById('commencer')
 const controle = document.querySelector('.boutonsControle')
+let intervalId = null;
 
 // fonction qui affiche le résultat de l'utilisateur
 function afficherResultat(score){
@@ -20,29 +21,13 @@ function choisirMotAuHasard(listePropositions) {
     return listePropositions[i];
 }
 
-// FONCTION QUI FAIT APPARAITRE LE BOUTON STOP
-function stop(){
-    let stop = `<input type="button" value="Arreter" class="stop" id="stop">`
-    const arreter = document.getElementById('stop')
-    commencer.addEventListener("click", function () {
-        controle.innerHTML = stop
-        arreter.addEventListener("click", function () {
-            txtUtilisateur.disabled = true
-            validation.disabled = true
-            commencer.disabled = false
-            clearInterval(intervalId)
-        })
-    })
-}
-
-
 // Cette fonction lance le décompte du temps
 function lancerCompteARebours() {
     let temps = 60 // Le temps de départ
     let timerElement = document.getElementById("timer")
 
     // On utilise setInterval pour répéter l'action toutes les 1000ms (1 seconde)
-    let intervalId = setInterval(() => {
+        intervalId = setInterval(() => {
         temps-- // On enlève 1 seconde
         timerElement.innerText = temps // On met à jour l'affichage
 
@@ -69,7 +54,6 @@ function lancerJeu() {
     validation.disabled = true
 
     afficherResultat(score)
-    stop()
     commencer.addEventListener('click', function () {
         lancerCompteARebours()
         motActuel = choisirMotAuHasard(listePropositions)
@@ -78,6 +62,22 @@ function lancerJeu() {
         validation.disabled = false
         commencer.disabled = true
         txtUtilisateur.focus()
+        score = 0
+        afficherResultat(score);
+
+        let stopBtnHTML = `<input type="button" value="Arreter" class="stop" id="stop">`
+        controle.innerHTML = stopBtnHTML
+        let btnStop = document.getElementById("stop")
+
+        btnStop.addEventListener("click", function() {
+            clearInterval(intervalId); // On arrête le chrono
+            txtUtilisateur.disabled = true;
+            validation.disabled = true;
+            commencer.disabled = false; // On permet de relancer
+            controle.innerHTML = ""; // On retire le bouton stop
+            afficherProposition("Jeu arrêté");
+        })
+
     })
 
     // Gestion de reponse utilisitauer
