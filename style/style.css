@@ -69,7 +69,7 @@ section{
             color: var(--color-secondary);
             background-color: var(--color-tertiary);
             border-radius: 10px;
-            padding:2vh 4vw;
+            padding:30px 20px;
             margin: 1vw 2vw;
             font-size: 2rem;
             input{
@@ -110,8 +110,40 @@ section{
                 background-color: #ccc6c6;
             }
         }
+        .zoneInfo {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            margin: 20px 0;
+            width: 100%;
+
+        }
+
+        #timer {
+            font-weight: bold;
+            font-size: 1.5rem; /* On le met en gros */
+            color: var(--color-primary); /* Bleu foncé de ta charte */
+        }
+    }
+    .commencer{
+        transition: 0.2s;
+        display: flex;
+        border: none;
+        border-radius: 10px;
+        background-color: var(--color-primary);
+        color: var(--color-tertiary);
+        font-weight: bolder;
+        font-size: 1.2rem;
+        margin-top: 30px;
+        padding: 10px 20px;
+
+        cursor: pointer;
+    }
+    .commencer:hover{
+        transform: scale(1.1);
     }
 }
+
 footer{
     margin-top: auto; /* Le "propulseur" qui envoie le footer tout en bas */
     text-align: center;

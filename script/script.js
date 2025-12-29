@@ -1,56 +1,105 @@
 let txtUtilisateur = document.getElementById("réponse")
 let validation = document.getElementById("validation")
 let proposition = document.querySelector(".proposition input")
-let score = 0
 let scoreUtilisateur = document.querySelector(".zoneScore")
 let choixUtilisateur = document.querySelectorAll(".zoneOptions input")
+let commencer = document.getElementById('commencer')
 
 // fonction qui affiche le résultat de l'utilisateur
-function afficherResultat(score, nbMotsProposes){
-    let fin = `<p>Votre Score est de: <span id="score">${score}</span> sur 
-                    <span id="totalité">${nbMotsProposes}</span> </p>`
+function afficherResultat(score){
+    let fin = `<p>Votre Score est de: <span id="score">${score}`
     scoreUtilisateur.innerHTML = fin
 }
 
-function choisirPhrasesOuMots(){
-    // Déclaration de la variable contenant le choix de l'utilisateur
-    let choix = prompt("Avec quelle liste désirez-vous jouer : 'mots' ou 'phrases' ?")
-// Tant que l'utilisateur n'a pas saisi "mots" ou "phrases", on lui redemande de saisir un choix
-    while (choix !== "mots" && choix !== "phrases") {
-        choix = prompt("Avec quelle liste désirez-vous jouer : 'mots' ou 'phrases' ?")
-    }
-    return choix
+function afficherProposition(texte) {
+    proposition.value = texte
+}
+function choisirMotAuHasard(listePropositions) {
+    let i = Math.floor(Math.random() * listePropositions.length);
+    return listePropositions[i];
 }
 
-function lancerBoucleDeJeu(listePropositions){
-    let score = 0
-    // On parcourt le tableau des mots
-    for (let i = 0; i < listePropositions.length; i++) {
-        // On demande à l'utilisateur de saisir le mot correspondant à l'indice i
-        let motUtilisateur = prompt("Entrez le mot : " + listePropositions[i])
-        if (motUtilisateur === listePropositions[i]) {
-            // Si le mot saisi par l'utilisateur est correct, on incrémente le score
-            score++
+/**
+ * Cette fonction lance le décompte du temps
+ */
+function lancerCompteARebours() {
+    let temps = 60 // Le temps de départ
+    let timerElement = document.getElementById("timer")
+
+    // On utilise setInterval pour répéter l'action toutes les 1000ms (1 seconde)
+    let intervalId = setInterval(() => {
+        temps-- // On enlève 1 seconde
+        timerElement.innerText = temps // On met à jour l'affichage
+
+        // Si le temps est écoulé
+        if (temps === 0) {
+            clearInterval(intervalId) // On arrête le chrono
+
+            // On désactive le jeu
+            txtUtilisateur.disabled = true
+            validation.disabled = true
+
+            // Petit message de fin (optionnel)
+            timerElement.innerText = "Temps écoulé !"
         }
-    }
-    return score
+    }, 1000)
 }
 
 function lancerJeu(){
-    let choix = choisirPhrasesOuMots()
+    let i = 0
     let score = 0
-    let nbMotsProposes = 0
+    let motActuel = ''
+    let listePropositions = listeMots
+    commencer.addEventListener('click', function(){
+        lancerCompteARebours()
+        motActuel = choisirMotAuHasard(listePropositions)
+        afficherProposition(motActuel)
+        txtUtilisateur.disabled = false
+        validation.disabled = false
+        commencer.disabled = true
+        txtUtilisateur.focus()
+    })
 
-    if (choix === "mots") {
-        score = lancerBoucleDeJeu(listeMots)
-        nbMotsProposes = listeMots.length
-    } else {
-        score = lancerBoucleDeJeu(listePhrases)
-        nbMotsProposes = listePhrases.length
+    // Gestion de reponse utilisitauer
+    validation.addEventListener("click", function(event){
+        if (txtUtilisateur.value === motActuel) {
+            // Si le mot saisi par l'utilisateur est correct, on incrémente le score
+            if (listePropositions === listeMots) {
+                score = score+ 100
+            }
+            else{
+                score = score+300
+            }
+            txtUtilisateur.value = '' // On vide le champ texte
+            motActuel = choisirMotAuHasard(listePropositions) // On pioche un nouveau mot
+            afficherProposition(motActuel) // On l'affiche
+        }
+    })
+
+    // GESTION DES BOUTONS RADIO (Choix Mots / Phrases)
+    for (let index = 0; index < choixUtilisateur.length; index++){
+        let boutonActuel = choixUtilisateur[index]
+
+        boutonActuel.addEventListener("click", function(event){
+            let monBouton = event.target;
+
+            // Étape A : On change la liste utilisée
+            if (monBouton.value === "mots") {
+                listePropositions = listeMots;
+            } else {
+                listePropositions = listePhrases;
+            }
+
+            // Étape B : C'est ici la correction !
+            // On pioche un nouveau mot dans la NOUVELLE liste
+            motActuel = choisirMotAuHasard(listePropositions);
+
+            // On l'affiche à l'écran
+            afficherProposition(motActuel);
+
+            // Petit bonus : On remet le curseur dans la case pour écrire direct
+            txtUtilisateur.value = ""; // On vide si l'utilisateur avait commencé à écrire
+            txtUtilisateur.focus();
+        })
     }
-
-    afficherResultat(score, nbMotsProposes)
 }
-
-
-
