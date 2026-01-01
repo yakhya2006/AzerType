@@ -2,7 +2,7 @@ let txtUtilisateur = document.getElementById("réponse")
 let validation = document.getElementById("validation")
 let proposition = document.querySelector(".proposition")
 let scoreUtilisateur = document.querySelector(".zoneScore")
-let choixUtilisateur = document.querySelectorAll(".zoneOptions input")
+let choixUtilisateur = document.querySelectorAll('input[name="choix"]')
 let commencer = document.getElementById('commencer')
 const controle = document.querySelector('.boutonsControle')
 let intervalId = null;
@@ -69,7 +69,7 @@ function lancerJeu() {
         controle.innerHTML = stopBtnHTML
         let btnStop = document.getElementById("stop")
 
-        btnStop.addEventListener("click", function() {
+        btnStop.addEventListener("click", function () {
             clearInterval(intervalId); // On arrête le chrono
             txtUtilisateur.disabled = true;
             validation.disabled = true;
@@ -99,7 +99,7 @@ function lancerJeu() {
     })
 
     // Gestion de la touche "Entrée"
-    txtUtilisateur.addEventListener('keyup', function(event) {
+    txtUtilisateur.addEventListener('keyup', function (event) {
         // Si la touche relâchée est "Enter"
         if (event.key === "Enter") {
             // On simule un clic sur le bouton validation
@@ -108,29 +108,36 @@ function lancerJeu() {
     });
 
     // GESTION DES BOUTONS RADIO (Choix Mots / Phrases)
-    for (let index = 0; index < choixUtilisateur.length; index++) {
-        let boutonActuel = choixUtilisateur[index]
+    let choixActuel = ''
+    for (let i = 0; i < choixUtilisateur.length; i++) {
+        // Initialisation de la liste au démarrage du jeu, basée sur le bouton radio coché par défaut
+        if (choixUtilisateur[i].checked) {
+            let choixActuelInitial = choixUtilisateur[i].value;
+            if (choixActuelInitial === "mots") {
+                listePropositions = listeMots;
+            } else {
+                listePropositions = listePhrases;
+            }
+        }
 
-        boutonActuel.addEventListener("click", function (event) {
-            let monBouton = event.target;
+        choixUtilisateur[i].addEventListener('change', function (event) {
+            let choixActuel = event.target.value; // Récupère la valeur du bouton radio sélectionné
 
-            // Étape A : On change la liste utilisée
-            if (monBouton.value === "mots") {
+            if (choixActuel === "mots") {
                 listePropositions = listeMots;
             } else {
                 listePropositions = listePhrases;
             }
 
-            // Étape B : C'est ici la correction !
             // On pioche un nouveau mot dans la NOUVELLE liste
             motActuel = choisirMotAuHasard(listePropositions);
 
             // On l'affiche à l'écran
             afficherProposition(motActuel);
 
-            // Petit bonus : On remet le curseur dans la case pour écrire direct
+            // On remet le curseur dans la case pour écrire direct
             txtUtilisateur.value = ""; // On vide si l'utilisateur avait commencé à écrire
             txtUtilisateur.focus();
-        })
+        });
     }
 }
